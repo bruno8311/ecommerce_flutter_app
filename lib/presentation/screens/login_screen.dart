@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return TemplateLoginPage(
       title: 'Bienvenido',
       subtitle: 'Inicia sesión para continuar',
-      showBackArrow: true,
+      showBackArrow: false,
       onLogin: (email, password) => _handleLogin(context, email, password),
       onForgotPassword: () {
         ScaffoldMessenger.of(context).showSnackBar(

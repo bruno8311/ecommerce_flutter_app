@@ -8,10 +8,6 @@ import '../../domain/usecases/product/delete_product.dart';
 import '../../domain/usecases/product/get_product.dart';
 
 class ProductProvider extends ChangeNotifier {
-	// Obtener productos por categoría
-	List<Product> getProductsByCategory(String category) {
-		return products.where((p) => p.category == category).toList();
-	}
 
 	List<Product> get mensClothing => getProductsByCategory("men's clothing");
 	List<Product> get womensClothing => getProductsByCategory("women's clothing");
@@ -119,5 +115,10 @@ class ProductProvider extends ChangeNotifier {
 		);
 		await loadsProducts();
 		return error;
+	}
+
+  // Obtener productos por categoría
+	List<Product> getProductsByCategory(String category) {
+		return products.where((p) => p.category == category).toList();
 	}
 }

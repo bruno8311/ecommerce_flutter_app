@@ -1,47 +1,30 @@
+import 'package:atomic_desing_system_package/atomic_desing_system_package.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/domain/entities/user.dart';
 
 class ContactScreen extends StatelessWidget {
-  const ContactScreen({super.key});
+  final User user;
+  const ContactScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Contacto')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Contáctanos', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            const Text('Email: soporte@ecommerce.com'),
-            const SizedBox(height: 8),
-            const Text('Teléfono: +51 999 999 999'),
-            const SizedBox(height: 24),
-            const Text('¿Tienes alguna consulta?'),
-            const SizedBox(height: 8),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Escribe tu mensaje',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 4,
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Mensaje enviado. ¡Gracias por contactarnos!')),
-                  );
-                },
-                child: const Text('Enviar'),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return TemplateContactPage(
+      headerTitle: 'Contacto',
+      headerUserName: user.username,
+      headerUserImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=687&auto=format&fit=crop',
+      headerShowBackArrow: true,
+      headerOnHome: () {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Home')));
+      },
+      headerOnLogout: () {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Logout')));
+      },
+      descriptiveTitle: 'Contáctanos',
+      descriptiveSubtitle:'Email: soporte@ecommerce.com\nTeléfono: +51 999 999 999\n\n¿Tienes alguna consulta?',
+      descriptiveButtonText: 'Enviar',
+      descriptiveButtonDependsOnText: true,
+      descriptiveOnButtonPressed: (text) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Se envió el mensaje: $text'))),
+      footerIcons: const [Icons.facebook, Icons.email],
     );
   }
 }

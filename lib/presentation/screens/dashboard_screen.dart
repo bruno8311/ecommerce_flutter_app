@@ -4,6 +4,7 @@ import 'package:flutter_ecommerce_app/domain/entities/user.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/cart_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/catalog_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/contact_screen.dart';
+import 'package:flutter_ecommerce_app/presentation/screens/login_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/support_screen.dart';
 import 'package:provider/provider.dart';
 import 'product_detail_screen.dart';
@@ -40,13 +41,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return TemplateDashboardPage(
         headerUserName: widget.user.username,
         headerUserImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=687&auto=format&fit=crop',
-        headerShowBackArrow: true,
+        headerShowBackArrow: false,
         headerOnSearch: (value) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => SearchScreen(initialQuery: value),
+              builder: (_) => SearchScreen(initialQuery: value, user: widget.user),
             ),
           );
+        },
+        headerTitle: 'Ecommerce App',
+        headerOnLogout: () {
+        Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const LoginScreen(),
+              ),
+            );
+        },
+        headerOnHome: () {
         },
         headerHintText: 'Buscar productos...',
         bodyCardHeaderTitle: 'Explora la tienda',
@@ -69,14 +80,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => const CatalogScreen(),
+                builder: (_) => CatalogScreen(user: widget.user),
               ),
             );
           },
           () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => const SearchScreen(),
+                builder: (_) => SearchScreen(initialQuery: '', user: widget.user),
               ),
             );
           },
@@ -84,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // Navegar a la pantalla del carrito
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => const CartScreen(),
+                builder: (_) => CartScreen(user: widget.user),
               ),
             );
           },
@@ -105,14 +116,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           pomotions.map((p) => () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => ProductDetailScreen(product: p),
+                builder: (_) => ProductDetailScreen(product: p, user: widget.user),
               ),
             );
           }).toList(),
           novedades.map((p) => () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => ProductDetailScreen(product: p),
+                builder: (_) => ProductDetailScreen(product: p, user: widget.user),
               ),
             );
           }).toList(),
@@ -126,14 +137,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => const ContactScreen(),
+              builder: (_) => ContactScreen(user: widget.user),
             ),
           );
         },
         () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => const SupportScreen(),
+              builder: (_) => SupportScreen(user: widget.user),
             ),
           );
         },

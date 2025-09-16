@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../domain/entities/cart.dart';
 import '../../data/repositories/cart_repository_impl.dart';
@@ -82,5 +83,15 @@ class CartProvider extends ChangeNotifier {
       (_) => errorMessage = null,
     );
     await loadCarts();
+  }
+
+  /// Devuelve los carritos que pertenecen al usuario con el userId dado.
+  List<Cart> getCartsByUserId(int userId) {
+    return carts.where((cart) => cart.userId == userId).toList();
+  }
+
+  /// Permite establecer manualmente la lista de carritos (útil para pruebas).
+  void setCarts(List<Cart> newCarts) {
+    carts = newCarts;
   }
 }

@@ -13,10 +13,10 @@ packages:
     dependency: "direct main"
     description:
       name: atomic_desing_system_package
-      sha256: "445c03085c8599166df9ecf9a1467f23fb4bb0a0497c3fc23c9bbbe15fba317e"
+      sha256: "8b7c65a7e7b22519093b36bc03c3ba9e652bcacc08682677640b8ade030e0ec7"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.7"
   boolean_selector:
     dependency: transitive
     description:
