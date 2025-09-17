@@ -39,11 +39,10 @@ class ProductProvider extends ChangeNotifier {
 			String? error;
 			result.fold(
 				(err) {
-					errorMessage = err;
+					products = [];
 					error = err;
 				},
 				(list) {
-					errorMessage = null;
 					products = list;
 					error = null;
 				},
@@ -55,13 +54,14 @@ class ProductProvider extends ChangeNotifier {
 	Future<Product?> fetchProduct(int id) async {
 		final result = await getProductUseCase.call(id);
 		Product? productResult;
-		result.fold((error) {
-			errorMessage = error;
-			productResult = null;
-    }, (product) {
-			errorMessage = null;
-			productResult = product;
-		});
+		result.fold(
+      (error) {
+        productResult = null;
+      },
+      (product) {
+        productResult = product;
+		  }
+    );
 		notifyListeners();
 		return productResult;
 	}

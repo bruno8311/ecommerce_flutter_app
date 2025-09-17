@@ -2,8 +2,29 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/product_item_model.dart';
 
+
+import '../models/cart_model.dart';
+
 class LocalStorage {
   static const String key = 'products';
+  static const String cartsKey = 'carts';
+  // Obtener carritos desde SharedPreferences
+  Future<List<CartItemModel>> getCarts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cartsString = prefs.getString(cartsKey);
+    if (cartsString != null) {
+      final cartsJson = jsonDecode(cartsString) as List;
+      return cartsJson.map((e) => CartItemModel.fromJson(Map<String, dynamic>.from(e))).toList();
+    }
+    return [];
+  }
+
+  // Guardar carritos en SharedPreferences
+  Future<void> saveCarts(List<CartItemModel> carts) async {
+    final prefs = await SharedPreferences.getInstance();
+    final cartsJson = carts.map((e) => e.toJson()).toList();
+    await prefs.setString(cartsKey, jsonEncode(cartsJson));
+  }
 
   // Obtener productos desde SharedPreferences
   Future<List<ProductItemModel>> getProducts() async {

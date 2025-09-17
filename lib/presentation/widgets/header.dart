@@ -6,10 +6,12 @@ import 'package:flutter_ecommerce_app/presentation/screens/login_screen.dart';
 
 class AppHeader extends StatelessWidget {
   final User user;
+  final String title;
 
   const AppHeader({
     super.key,
     required this.user,
+    required this.title,
   });
 
   @override
@@ -31,7 +33,7 @@ class AppHeader extends StatelessWidget {
           ),
         );
       },
-      title: 'Catálogo',
+      title: title,
     );
   }
 }

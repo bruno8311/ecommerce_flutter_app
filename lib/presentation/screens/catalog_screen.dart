@@ -1,7 +1,7 @@
 import 'package:atomic_desing_system_package/atomic_desing_system_package.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/domain/entities/user.dart';
-import 'package:flutter_ecommerce_app/presentation/screens/product_detail_screen.dart';
+import 'package:flutter_ecommerce_app/presentation/screens/detail_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/widgets/dropdown.dart';
 import 'package:flutter_ecommerce_app/presentation/widgets/footer.dart';
 import 'package:flutter_ecommerce_app/presentation/widgets/header.dart';
@@ -27,15 +27,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
         ? productProvider.products
         : productProvider.getProductsByCategory(selectedCategory!);
 
-    return 
-    TemplateBasePage(
-      header: AppHeader(user: widget.user),
+    return TemplateBasePage(
+      header: AppHeader(user: widget.user, title: 'Catálogo'),
       body: Column(
           children: [
              Padding(
                padding: const EdgeInsets.all(8.0),
                child: 
                AppDropdown(
+                textLabel: 'Categoría',
                  selectedItem: selectedCategory,
                  listItems: categories,
                  onChanged: (value) {
@@ -57,7 +57,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => ProductDetailScreen(product: product, user: widget.user),
+                                builder: (_) => DetailScreen(product: product, user: widget.user),
                               ),
                             );
                           },

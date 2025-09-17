@@ -1,7 +1,7 @@
 import 'package:atomic_desing_system_package/atomic_desing_system_package.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ecommerce_app/domain/entities/cart.dart';
 import 'package:flutter_ecommerce_app/domain/entities/user.dart';
+import 'package:flutter_ecommerce_app/presentation/screens/edit_cart_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/widgets/footer.dart';
 import 'package:flutter_ecommerce_app/presentation/widgets/header.dart';
 import 'package:provider/provider.dart';
@@ -16,96 +16,113 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-
+  bool _loading = true;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final cartProvider = Provider.of<CartProvider>(context, listen: false);
       await cartProvider.loadCarts();
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final cartProvider = Provider.of<CartProvider>(context);
-    print('Los carritos del user son: ${cartProvider.getCartsByUserId(widget.user.id)}');
     return TemplateBasePage(
-      header: AppHeader(user: widget.user),
+      header: AppHeader(user: widget.user, title: 'Mis Carritos'),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            cartProvider.carts.isEmpty
-                ? const Text('No hay carritos disponibles.')
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: cartProvider.carts.length,
-                      itemBuilder: (context, index) {
-                        final cart = cartProvider.carts[index];
-                        return OrganismListIconCard (
-                          titles: ['Carrito ID: ${cart.id}'],
-                          subtitles: ['Productos: ${cart.products.length}'],
-                          icons: [Icons.shopping_cart],
-                          onTaps: [
-                            () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Carrito ID: ${cart.id}, Productos: ${cart.products.length}'))
-                              );
-                            }
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                   ],
-                )
-
+        child: Consumer<CartProvider>(
+          builder: (context, cartProvider, _) {
+            final userCarts = cartProvider.getCartsByUserId(widget.user.id);
+            if (_loading) {
+              return const Text('Cargando...');
+            }
+            if (userCarts.isEmpty) {
+              return const Text('No tienes carritos, agrega productos');
+            }
+            return ListView.builder(
+              itemCount: userCarts.length,
+              itemBuilder: (context, index) {
+                final cart = userCarts[index];
+                return OrganismListIconCard(
+                  titles: ['Carrito ${cart.id}'],
+                  subtitles: ['N° Productos: ${cart.products.length} - Cantidad total de productos: ${cart.products.fold<int>(0, (sum, p) => sum + p.quantity)}'],
+                  icons: [Icons.shopping_cart],
+                  onTaps: [
+                    () async {
+                      final cartIdToDelete = cart.id;
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (sheetContext) {
+                          return SafeArea(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  leading: const AtomIcon(icon: Icons.edit),
+                                  title: const AtomLabel(text: 'Ver / editar carrito'),
+                                  onTap: () {
+                                    Navigator.pop(sheetContext);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => EditCartScreen(user: widget.user, cart: cart),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                ListTile(
+                                  leading: AtomIcon(icon: Icons.delete, color: Colors.red),
+                                  title: const Text('Eliminar carrito'),
+                                  onTap: () async {
+                                    Navigator.pop(sheetContext);
+                                    final error = await cartProvider.deleteCart(cartIdToDelete);
+                                    if (error != null) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Error al eliminar carrito: $error')),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Eliminado con exito')),
+                                      );
+                                    }
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const AtomIcon(icon: Icons.check, color: Colors.green),
+                                  title: const Text('Comprar carrito'),
+                                  onTap: () async {
+                                    Navigator.pop(sheetContext);
+                                    final error = await cartProvider.deleteCart(cartIdToDelete);
+                                    if (error != null) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Error al comprar carrito: $error')),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Compra realizada con exito')),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ),
       footer: AppFooter(user: widget.user),
     );
-
-    //   ),
-    //   body: _loading
-    //       ? const Center(child: CircularProgressIndicator())
-    //       : (_cart == null || _cart!.products.isEmpty)
-    //           ? Center(
-    //               child: Column(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: [
-    //                   const Text('Tu carrito está vacío'),
-    //                   const SizedBox(height: 16),
-    //                   ElevatedButton.icon(
-    //                     icon: const Icon(Icons.shopping_bag),
-    //                     label: const Text('Ir al catálogo'),
-    //                     onPressed: () {
-    //                       Navigator.of(context).pushReplacementNamed('/catalog');
-    //                     },
-    //                   ),
-    //                 ],
-    //               ),
-    //             )
-    //           : ListView.separated(
-    //               padding: const EdgeInsets.all(16),
-    //               itemCount: _cart!.products.length,
-    //               separatorBuilder: (_, __) => const Divider(),
-    //               itemBuilder: (context, index) {
-    //                 final cartProduct = _cart!.products[index];
-    //                 return ListTile(
-    //                   leading: const Icon(Icons.shopping_cart),
-    //                   title: Text('Producto ID: ${cartProduct.productId}'),
-    //                   subtitle: Text('Cantidad: ${cartProduct.quantity}'),
-    //                   trailing: IconButton(
-    //                     icon: const Icon(Icons.delete, color: Colors.red),
-    //                     onPressed: () {
-    //                       // Eliminar producto del carrito
-    //                       // cartProvider.deleteCartProduct(cartProduct.productId);
-    //                     },
-    //                   ),
-    //                 );
-    //               },
-    //             ),
-    //   bottomNavigationBar: null, // Puedes agregar lógica para el botón de pago si lo deseas
-    // );
   }
 }

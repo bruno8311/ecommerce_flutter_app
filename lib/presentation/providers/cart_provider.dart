@@ -29,69 +29,86 @@ class CartProvider extends ChangeNotifier {
     deleteCartUseCase = DeleteCart(_repository);
   }
 
-  Future<void> loadCarts() async {
+  Future<String?> loadCarts() async {
     final result = await getAllCartsUseCase.call();
+		String? error;
     result.fold(
       (error) {
-        errorMessage = error;
         carts = [];
+				error = error;
       },
       (list) {
-        errorMessage = null;
         carts = list;
+        error = null;
       },
     );
     notifyListeners();
+    return error;
   }
 
   Future<Cart?> getCart(int id) async {
     final result = await getCartUseCase.call(id);
     Cart? cartResult;
-		result.fold((error) {
-			errorMessage = error;
-			cartResult = null;
-    }, (cart) {
-			errorMessage = null;
-			cartResult = cart;
-		});
+		result.fold(
+      (error) {
+			  cartResult = null;
+      },
+      (cart) {
+			  cartResult = cart;
+		  }
+    );
     notifyListeners();
     return cartResult;
   }
 
-  Future<void> addCart(Cart cart) async {
+  Future<String?> addCart(Cart cart) async {
     final result = await addCartUseCase.call(cart);
+    String? error;
     result.fold(
-      (error) => errorMessage = error,
-      (_) => errorMessage = null,
+      (err) {
+        error = err;
+      },
+      (_) {
+        error = null;
+      },
     );
     await loadCarts();
+    return error;
   }
 
-  Future<void> updateCart(Cart cart) async {
+  Future<String?> updateCart(Cart cart) async {
     final result = await updateCartUseCase.call(cart);
+    String? error;
     result.fold(
-      (error) => errorMessage = error,
-      (_) => errorMessage = null,
+      (err) {
+        error = err;
+      },
+      (_) {
+        error = null;
+      }
     );
     await loadCarts();
+    return error;
   }
 
-  Future<void> deleteCart(int id) async {
+  Future<String?> deleteCart(int id) async {
+    print('Eliminando carrito con id: $id');
     final result = await deleteCartUseCase.call(id);
+    String? error;
     result.fold(
-      (error) => errorMessage = error,
-      (_) => errorMessage = null,
+      (err) {
+        error = err;
+      },
+      (_) {
+        error = null;
+      },
     );
     await loadCarts();
+    return error;
   }
 
   /// Devuelve los carritos que pertenecen al usuario con el userId dado.
   List<Cart> getCartsByUserId(int userId) {
     return carts.where((cart) => cart.userId == userId).toList();
-  }
-
-  /// Permite establecer manualmente la lista de carritos (útil para pruebas).
-  void setCarts(List<Cart> newCarts) {
-    carts = newCarts;
   }
 }

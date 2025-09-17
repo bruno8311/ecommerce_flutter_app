@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/domain/entities/user.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/dashboard_screen.dart';
-import 'package:flutter_ecommerce_app/presentation/screens/product_detail_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/login_screen.dart';
+import 'package:flutter_ecommerce_app/presentation/screens/detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:atomic_desing_system_package/atomic_desing_system_package.dart';
 import '../providers/product_provider.dart';
@@ -64,7 +64,7 @@ class _SearchScreenState extends State<SearchScreen> {
         return () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => ProductDetailScreen(product: product, user: widget.user),
+              builder: (_) => DetailScreen(product: product, user: widget.user),
             ),
           );
         };

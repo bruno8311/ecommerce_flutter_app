@@ -5,9 +5,8 @@ import 'package:flutter_ecommerce_app/presentation/screens/cart_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/catalog_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/contact_screen.dart';
 import 'package:flutter_ecommerce_app/presentation/screens/login_screen.dart';
-import 'package:flutter_ecommerce_app/presentation/screens/support_screen.dart';
 import 'package:provider/provider.dart';
-import 'product_detail_screen.dart';
+import 'detail_screen.dart';
 import 'search_screen.dart';
 import '../providers/product_provider.dart';
 
@@ -116,14 +115,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           pomotions.map((p) => () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => ProductDetailScreen(product: p, user: widget.user),
+                builder: (_) => DetailScreen(product: p, user: widget.user),
               ),
             );
           }).toList(),
           novedades.map((p) => () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => ProductDetailScreen(product: p, user: widget.user),
+                builder: (_) => DetailScreen(product: p, user: widget.user),
               ),
             );
           }).toList(),
@@ -132,19 +131,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Icons.facebook,
           Icons.email,
         ],
-        footerLabels: const ['Contacto', 'Ayuda'],
+        footerLabels: const ['Contacto', 'Soporte'],
         footerActions: [
         () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => ContactScreen(user: widget.user),
+              builder: (_) => ContactScreen(user: widget.user, userTitle: 'Contactanos', descriptionTitle: 'Siguenos en nuestras redes sociales', descriptionSubtitle: 'Email: soporte@ecommerce.com\nFacebook: facebook.com/ecommerce\nInstagram: instagram.com/ecommerce\n Dejanos un comentario:',),
             ),
           );
         },
         () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => SupportScreen(user: widget.user),
+              builder: (_) => ContactScreen(user: widget.user, userTitle: 'Soporte', descriptionTitle: '¿Tienes algun inconveniente con el sistema?', descriptionSubtitle: 'Linea telefónica para soporte en linea:\n Teléfono: +51 999 999 999\n Escribe tu problema y te ayudaremos lo antes posible.'),
             ),
           );
         },
