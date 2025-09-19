@@ -37,7 +37,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final novedades = productProvider.products.take(2).toList();
   final pomotions = productProvider.products.take(4).toList();
 
-      return TemplateDashboardPage(
+      return 
+      TemplateDashboardPage(
         headerUserName: widget.user.username,
         headerUserImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=687&auto=format&fit=crop',
         headerShowBackArrow: false,

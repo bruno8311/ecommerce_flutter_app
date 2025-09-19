@@ -77,10 +77,10 @@ packages:
     dependency: "direct main"
     description:
       name: fake_store_api_package
-      sha256: "0cedbc7fcf8287f152340eca300449034c7d7d99359e320dfbbe966c4a1e8f8b"
+      sha256: c192443a86eeecb01659839e00614a81d39a06cabf2f29c97c581b89b2d9a93b
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.6"
   ffi:
     dependency: transitive
     description:
